@@ -1,0 +1,26 @@
+[Unit]
+Description=Nextcloud Init container
+After=nextcloud-server.service nextcloud-db.service
+Requires=nextcloud-server.service nextcloud-db.service
+
+[Container]
+ContainerName=nextcloud-init
+Image=docker.io/nextcloud:apache
+AutoUpdate=registry
+Entrypoint=/lifecycle.sh
+Exec=init
+UserNS=keep-id:uid=33,gid=33
+EnvironmentFile=%h/storage/nextcloud/nextcloud.env
+Secret=nextcloud-db-password,type=env,target=NC_DB_PASSWORD
+Secret=nextcloud-admin-password,type=env,target=NC_ADMIN_PASSWORD
+Volume=%h/storage/nextcloud/html:/var/www/html:z
+Volume=%h/storage/nextcloud/custom_apps:/var/www/html/custom_apps:z
+Volume=%h/storage/nextcloud/config:/var/www/html/config:z
+Volume=%h/storage/nextcloud/data:/var/www/html/data:z
+Volume=%h/storage/nextcloud/bin/lifecycle.sh:/lifecycle.sh:z,ro
+Network=nextcloud.network
+Pod=nextcloud.pod
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes

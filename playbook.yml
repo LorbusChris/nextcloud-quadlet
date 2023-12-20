@@ -1,0 +1,160 @@
+- name: Setup Nexcloud quadlet
+  hosts: all
+  become: false
+
+  tasks:
+  - name: Populate service facts
+    ansible.builtin.service_facts:
+
+  - name: Open ports in firewalld
+    become: yes
+    become_user: root 
+    ansible.posix.firewalld:
+      port: "{{ item }}"
+      permanent: true
+      state: enabled
+    loop:
+    - 8000/tcp
+    - 9000/tcp
+    when:
+    - services['firewalld.service'] is defined
+    - services['firewalld.service']['state'] == 'running'
+
+  - name: Create random strings
+    ansible.builtin.set_fact:
+      nc_db_root_password: "{{ lookup('community.general.random_string', special=false, length=20) }}"
+      nc_db_password: "{{ lookup('community.general.random_string', special=false, length=20) }}"
+
+  - name: Create a podman secret for the mysql db root password
+    containers.podman.podman_secret:
+      name: nextcloud-db-root-password
+      state: present
+      skip_existing: true
+      data: "{{ nc_db_root_password }}"
+
+  - name: Create a podman secret for the mysql db password
+    containers.podman.podman_secret:
+      name: nextcloud-db-password
+      state: present
+      skip_existing: true
+      data: "{{ nc_db_password }}"
+
+  - name: Create a podman secret for nextcloud admin user password
+    containers.podman.podman_secret:
+      name: nextcloud-admin-password
+      state: present
+      skip_existing: true
+      data: "{{ nc_admin_password }}"
+
+  - name: Create the required directories
+    ansible.builtin.file:
+      path: "{{ item }}"
+      state: directory
+      mode: '0755'
+    loop:
+    - ~/.config
+    - ~/.config/containers
+    - ~/.config/containers/systemd
+    - ~/.config/systemd
+    - ~/.config/systemd/user
+    - ~/storage
+    - ~/storage/nextcloud
+    - ~/storage/nextcloud/bin
+    - ~/storage/nextcloud/certs
+    - ~/storage/nextcloud/config
+    - ~/storage/nextcloud/custom_apps
+    - ~/storage/nextcloud/data
+    - ~/storage/nextcloud/db
+    - ~/storage/nextcloud/envoy
+    - ~/storage/nextcloud/html
+    - ~/storage/nextcloud/redis
+
+  - name: Copy the systemd and Quadlet files
+    ansible.builtin.copy:
+      src: .config
+      dest: ~/
+      mode: '0644'
+
+  - name: Copy files required for Nextcloud deployment
+    ansible.builtin.copy:
+      src: nextcloud/bin/lifecycle.sh
+      dest: ~/storage/nextcloud/bin/lifecycle.sh
+      mode: '0755'
+
+  - name: Copy envoy config
+    ansible.builtin.copy:
+      src: nextcloud/envoy/nextcloud-envoy-config.yaml
+      dest: ~/storage/nextcloud/envoy/nextcloud-envoy-config.yaml
+      mode: '0644'
+
+  - name: Touch redis-session.ini
+    ansible.builtin.file:
+      path: ~/storage/nextcloud/redis/redis-session.ini
+      state: touch
+      mode: '0644'
+
+  - name: Remove EnvironmentFile
+    ansible.builtin.file:
+      path: ~/storage/nextcloud/nextcloud.env
+      state: absent
+
+  - name: Touch EnvironmentFile
+    ansible.builtin.file:
+      path: ~/storage/nextcloud/nextcloud.env
+      state: touch
+      mode: '0644'
+
+  - name: Add NC_TRUSTED_DOMAINS env
+    ansible.builtin.lineinfile:
+      path: ~/storage/nextcloud/nextcloud.env
+      line: NC_TRUSTED_DOMAINS={{ nc_trusted_domains }}
+      create: yes
+
+  - name: Add NC_TRUSTED_PROXIES env
+    ansible.builtin.lineinfile:
+      path: ~/storage/nextcloud/nextcloud.env
+      line: NC_TRUSTED_PROXIES={{ nc_trusted_proxies }}
+      create: yes
+
+  - name: Add NC_DEFAULT_LANGUAGE env 
+    ansible.builtin.lineinfile:
+      path: ~/storage/nextcloud/nextcloud.env
+      line: NC_DEFAULT_LANGUAGE={{ nc_default_language }}
+      create: yes
+
+  - name: Add NC_DEFAULT_PHONE_REGION env 
+    ansible.builtin.lineinfile:
+      path: ~/storage/nextcloud/nextcloud.env
+      line: NC_DEFAULT_PHONE_REGION={{ nc_default_phone_region }}
+      create: yes
+
+  - name: Add NC_DEFAULT_LOCALE env 
+    ansible.builtin.lineinfile:
+      path: ~/storage/nextcloud/nextcloud.env
+      line: NC_DEFAULT_LOCALE={{ nc_default_locale }}
+      create: yes
+
+  - name: Add NC_DEFAULT_TIMEZONE env 
+    ansible.builtin.lineinfile:
+      path: ~/storage/nextcloud/nextcloud.env
+      line: NC_DEFAULT_TIMEZONE={{ nc_default_timezone }}
+      create: yes
+
+  - name: Run daemon reload to make Quadlet create the service files
+    ansible.builtin.systemd:
+      scope: user
+      daemon_reload: true
+
+  - name: Start the Nextcloud quadlet service
+    ansible.builtin.systemd:
+      name: nextcloud-pod
+      scope: user
+      state: restarted
+      enabled: true
+
+  - name: Start the Nextcloud cron timer
+    ansible.builtin.systemd:
+      name: nextcloud-cron.timer
+      scope: user
+      state: started
+      enabled: true

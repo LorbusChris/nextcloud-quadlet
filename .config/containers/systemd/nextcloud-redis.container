@@ -1,0 +1,12 @@
+[Unit]
+Description=Nextcloud Redis container
+
+[Container]
+ContainerName=nextcloud-redis
+Image=docker.io/redis:alpine
+AutoUpdate=registry
+Network=nextcloud.network
+Pod=nextcloud.pod
+
+[Service]
+Restart=always

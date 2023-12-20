@@ -1,0 +1,9 @@
+[Unit]
+Description=Nextcloud pod
+
+[Pod]
+PodName=nextcloud
+Network=nextcloud.network
+
+[Install]
+WantedBy=multi-user.target default.target

@@ -1,0 +1,15 @@
+[Unit]
+Description=Nextcloud Collabora Office container
+
+[Container]
+ContainerName=nextcloud-office
+Image=docker.io/collabora/code:latest
+AutoUpdate=registry
+AddCapability=MKNOD
+Environment=DONT_GEN_SSL_CERT=true
+Environment=extra_params="--o:ssl.enable=false --o:ssl.termination=true --o:net.post_allow.host[0]=192.168.27.10 --o:storage.wopi.host[0]=192.168.27.10"
+Network=nextcloud.network
+Pod=nextcloud.pod
+
+[Service]
+Restart=always

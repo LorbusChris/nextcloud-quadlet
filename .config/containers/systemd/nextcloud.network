@@ -1,0 +1,8 @@
+[Unit]
+Description=Nextcloud Podman network
+
+[Network]
+NetworkName=nextcloud
+Subnet=192.168.27.0/24
+Gateway=192.168.27.1
+Label=app=nextcloud

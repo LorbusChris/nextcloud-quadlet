@@ -1,0 +1,147 @@
+static_resources:
+  listeners:
+  - name: nextcloud_server_listener
+    address:
+      socket_address:
+        address: 0.0.0.0
+        port_value: 8000
+    filter_chains:
+    - filters:
+      - name: envoy.filters.network.http_connection_manager
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+          stat_prefix: ingress_http
+          codec_type: AUTO
+          http_filters:
+          - name: envoy.filters.http.router
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
+          route_config:
+            name: nextcloud_server_route
+            virtual_hosts:
+            - name: nextcloud_server_service
+              domains: ["*"]
+              routes:
+              - match:
+                  prefix: "/.well-known/caldav"
+                route:
+                  cluster: nextcloud_server
+                  prefix_rewrite: "/remote.php/dav/"
+              - match:
+                  prefix: "/.well-known/carddav"
+                route:
+                  cluster: nextcloud_server
+                  prefix_rewrite: "/remote.php/dav/"
+              - match:
+                  prefix: "/"
+              # response_headers_to_add:
+              # - header:
+              #     key: "Strict-Transport-Security"
+              #     value: "max-age=15552000; includeSubDomains; preload"
+                route:
+                  cluster: nextcloud_server
+                  timeout: 30s
+      transport_socket:
+        name: envoy.transport_sockets.tls
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.DownstreamTlsContext
+          common_tls_context:
+            tls_certificates:
+            - certificate_chain:
+                filename: /etc/envoy-certificates/certificate.pem
+              private_key:
+                filename: /etc/envoy-certificates/certificate.key
+  - name: nextcloud_office_listener
+    address:
+      socket_address:
+        address: 0.0.0.0
+        port_value: 9000
+    filter_chains:
+    - filters:
+      - name: envoy.filters.network.http_connection_manager
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+          stat_prefix: ingress_http
+          codec_type: AUTO
+          #xff_num_trusted_hops: 0
+          #use_remote_address: true
+          upgrade_configs: 
+            upgrade_type: "websocket"
+          http_filters:
+          - name: envoy.filters.http.router
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
+          route_config:
+            name: nextcloud_office_route
+            virtual_hosts:
+            - name: nextcloud_office_service
+              domains: ["*"]
+              routes:
+              - match:
+                  prefix: "/browser"
+                route:
+                  cluster: nextcloud_office
+                  timeout: 0s
+              - match:
+                  prefix: "/hosting/discovery"
+                route:
+                  cluster: nextcloud_office
+              - match:
+                  prefix: "/hosting/capabilities"
+                route:
+                  cluster: nextcloud_office
+              - match:
+                  safe_regex:
+                    regex: "^/cool/(.*)/ws$"
+                route:
+                  cluster: nextcloud_office
+                  timeout: 0s
+              - match:
+                  prefix: "/cool/adminws"
+                route:
+                  cluster: nextcloud_office
+                  timeout: 0s
+              - match:
+                  safe_regex:
+                    regex: "^/(c|l)ool"
+                route:
+                  cluster: nextcloud_office
+      transport_socket:
+        name: envoy.transport_sockets.tls
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.DownstreamTlsContext
+          common_tls_context:
+            tls_certificates:
+            - certificate_chain:
+                filename: /etc/envoy-certificates/certificate.pem
+              private_key:
+                filename: /etc/envoy-certificates/certificate.key
+  clusters:
+  - name: nextcloud_server
+    connect_timeout: 3600s
+    type: STRICT_DNS
+    dns_refresh_rate: 1800s
+    lb_policy: ROUND_ROBIN
+    load_assignment:
+      cluster_name: nextcloud_server
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: nextcloud-server
+                port_value: 80
+  - name: nextcloud_office
+    connect_timeout: 3600s
+    type: STRICT_DNS
+    dns_refresh_rate: 60s
+    lb_policy: ROUND_ROBIN
+    load_assignment:
+      cluster_name: nextcloud_office
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: nextcloud-office
+                port_value: 9980

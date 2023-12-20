@@ -1,0 +1,22 @@
+[Unit]
+Description=Nextcloud MariaDB container
+
+[Container]
+ContainerName=nextcloud-db
+Image=docker.io/mariadb:10.6
+AutoUpdate=registry
+Exec=--transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
+UserNS=keep-id:uid=999,gid=999
+Environment=MARIADB_AUTO_UPGRADE=1
+#Environment=MARIADB_DISABLE_UPGRADE_BACKUP=1
+Environment=MYSQL_DATABASE=nextcloud
+Environment=MYSQL_USER=nextcloud
+Secret=nextcloud-db-root-password,type=env,target=MYSQL_ROOT_PASSWORD
+Secret=nextcloud-db-password,type=env,target=MYSQL_PASSWORD
+Volume=%h/storage/nextcloud/db:/var/lib/mysql:Z
+Network=nextcloud.network
+Pod=nextcloud.pod
+
+[Service]
+Restart=always
+TimeoutStartSec=900

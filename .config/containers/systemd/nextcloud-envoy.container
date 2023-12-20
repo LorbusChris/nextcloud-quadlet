@@ -1,0 +1,22 @@
+[Unit]
+Description=Nextcloud Envoy container
+After=nextcloud-server.service nextcloud-office.service nextcloud-init.service
+Wants=nextcloud-server.service nextcloud-office.service nextcloud-init.service
+
+[Container]
+ContainerName=nextcloud-envoy
+Image=docker.io/envoyproxy/envoy:v1.28-latest
+AutoUpdate=registry
+Environment=ENVOY_UID=0
+Volume=%h/storage/nextcloud/certs:/etc/envoy-certificates:z,ro
+Volume=%h/storage/nextcloud/envoy/nextcloud-envoy-config.yaml:/etc/envoy/envoy.yaml:z,ro
+PublishPort=8000:8000
+PublishPort=9000:9000
+Network=nextcloud.network
+Pod=nextcloud.pod
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target default.target

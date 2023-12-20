@@ -1,0 +1,22 @@
+[Unit]
+Description=Nextcloud Cron container
+After=nextcloud-server.service nextcloud-db.service
+Requires=nextcloud-server.service nextcloud-db.service
+
+[Container]
+ContainerName=nextcloud-cron
+Image=docker.io/nextcloud:apache
+AutoUpdate=registry
+Entrypoint=/lifecycle.sh
+Exec=periodic
+UserNS=keep-id:uid=33,gid=33
+Volume=%h/storage/nextcloud/html:/var/www/html:z
+Volume=%h/storage/nextcloud/custom_apps:/var/www/html/custom_apps:z
+Volume=%h/storage/nextcloud/config:/var/www/html/config:z
+Volume=%h/storage/nextcloud/data:/var/www/html/data:z
+Volume=%h/storage/nextcloud/bin/lifecycle.sh:/lifecycle.sh:z,ro
+Network=nextcloud.network
+Pod=nextcloud.pod
+
+[Service]
+Type=oneshot
