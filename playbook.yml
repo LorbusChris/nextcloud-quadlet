@@ -104,6 +104,12 @@
       state: touch
       mode: '0644'
 
+  - name: Add REDIS_HOST=nextcloud-valkey env
+    ansible.builtin.lineinfile:
+      path: ~/storage/nextcloud/nextcloud.env
+      line: REDIS_HOST=nextcloud-valkey
+      create: yes
+
   - name: Add NC_TRUSTED_DOMAINS env
     ansible.builtin.lineinfile:
       path: ~/storage/nextcloud/nextcloud.env

@@ -9,12 +9,12 @@ Image=docker.io/nextcloud:apache
 AutoUpdate=registry
 UserNS=keep-id:uid=33,gid=33
 Sysctl=net.ipv4.ip_unprivileged_port_start=80
+EnvironmentFile=%h/storage/nextcloud/nextcloud.env
 Volume=%h/storage/nextcloud/config:/var/www/html/config:z
 Volume=%h/storage/nextcloud/custom_apps:/var/www/html/custom_apps:z
 Volume=%h/storage/nextcloud/data:/var/www/html/data:z
 Volume=%h/storage/nextcloud/html:/var/www/html:z
 Volume=%h/storage/nextcloud/redis/redis-session.ini:/usr/local/etc/php/conf.d/redis-session.ini:Z
-Environment=REDIS_HOST=nextcloud-valkey
 Network=nextcloud.network
 IP=192.168.27.10
 Pod=nextcloud.pod
