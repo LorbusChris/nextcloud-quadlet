@@ -13,7 +13,8 @@ Volume=%h/storage/nextcloud/config:/var/www/html/config:z
 Volume=%h/storage/nextcloud/custom_apps:/var/www/html/custom_apps:z
 Volume=%h/storage/nextcloud/data:/var/www/html/data:z
 Volume=%h/storage/nextcloud/html:/var/www/html:z
-Volume=%h/storage/nextcloud/redis/redis-session.ini:/usr/local/etc/php/conf.d/redis-session.ini:z
+Volume=%h/storage/nextcloud/redis/redis-session.ini:/usr/local/etc/php/conf.d/redis-session.ini:Z
+Environment=REDIS_HOST=nextcloud-redis
 Network=nextcloud.network
 IP=192.168.27.10
 Pod=nextcloud.pod
