@@ -120,7 +120,7 @@ static_resources:
   - name: nextcloud_server
     connect_timeout: 3600s
     type: STRICT_DNS
-    dns_refresh_rate: 1800s
+    dns_refresh_rate: 60s
     lb_policy: ROUND_ROBIN
     load_assignment:
       cluster_name: nextcloud_server
