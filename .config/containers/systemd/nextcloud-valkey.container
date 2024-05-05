@@ -1,0 +1,12 @@
+[Unit]
+Description=Nextcloud Valkey container
+
+[Container]
+ContainerName=nextcloud-valkey
+Image=docker.io/valkey/valkey:7.2-alpine
+AutoUpdate=registry
+Network=nextcloud.network
+Pod=nextcloud.pod
+
+[Service]
+Restart=always

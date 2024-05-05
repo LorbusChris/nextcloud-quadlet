@@ -1,7 +1,7 @@
 [Unit]
 Description=Nextcloud Server container
-After=nextcloud-db.service nextcloud-redis.service
-Wants=nextcloud-db.service nextcloud-redis.service
+After=nextcloud-db.service nextcloud-valkey.service
+Wants=nextcloud-db.service nextcloud-valkey.service
 
 [Container]
 ContainerName=nextcloud-server
@@ -14,7 +14,7 @@ Volume=%h/storage/nextcloud/custom_apps:/var/www/html/custom_apps:z
 Volume=%h/storage/nextcloud/data:/var/www/html/data:z
 Volume=%h/storage/nextcloud/html:/var/www/html:z
 Volume=%h/storage/nextcloud/redis/redis-session.ini:/usr/local/etc/php/conf.d/redis-session.ini:Z
-Environment=REDIS_HOST=nextcloud-redis
+Environment=REDIS_HOST=nextcloud-valkey
 Network=nextcloud.network
 IP=192.168.27.10
 Pod=nextcloud.pod

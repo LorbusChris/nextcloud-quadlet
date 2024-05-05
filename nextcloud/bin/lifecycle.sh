@@ -54,7 +54,7 @@ nextcloud_init() {
     php occ config:system:set overwrite.cli.url --value="https://${CLI_URL}:8000"
     php occ config:system:set updatechecker --type=boolean --value="false"
     php occ config:system:set upgrade.disable-web --type=boolean --value="true"
-    php occ config:system:set redis host --value="nextcloud-redis"
+    php occ config:system:set redis host --value="nextcloud-valkey"
     php occ config:system:set redis port --value="6379"
     php occ config:system:set memcache.local --value="\OC\Memcache\APCu"
     php occ config:system:set memcache.distributed --value="\OC\Memcache\Redis"
