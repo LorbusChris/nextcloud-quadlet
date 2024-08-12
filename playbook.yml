@@ -7,8 +7,8 @@
     ansible.builtin.service_facts:
 
   - name: Open ports in firewalld
-    become: yes
-    become_user: root 
+    become: true
+    become_user: root
     ansible.posix.firewalld:
       port: "{{ item }}"
       permanent: true
