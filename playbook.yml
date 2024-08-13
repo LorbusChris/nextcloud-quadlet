@@ -7,8 +7,8 @@
     ansible.builtin.service_facts:
 
   - name: Open ports in firewalld
-    become: yes
-    become_user: root 
+    become: true
+    become_user: root
     ansible.posix.firewalld:
       port: "{{ item }}"
       permanent: true
@@ -93,58 +93,11 @@
       state: touch
       mode: '0644'
 
-  - name: Remove EnvironmentFile
-    ansible.builtin.file:
-      path: ~/storage/nextcloud/nextcloud.env
-      state: absent
-
-  - name: Touch EnvironmentFile
-    ansible.builtin.file:
-      path: ~/storage/nextcloud/nextcloud.env
-      state: touch
+  - name: Create EnvironmentFile
+    ansible.builtin.template:
+      src: nextcloud.env.j2
+      dest: ~/storage/nextcloud/nextcloud.env
       mode: '0644'
-
-  - name: Add REDIS_HOST=nextcloud-valkey env
-    ansible.builtin.lineinfile:
-      path: ~/storage/nextcloud/nextcloud.env
-      line: REDIS_HOST=nextcloud-valkey
-      create: yes
-
-  - name: Add NC_TRUSTED_DOMAINS env
-    ansible.builtin.lineinfile:
-      path: ~/storage/nextcloud/nextcloud.env
-      line: NC_TRUSTED_DOMAINS={{ nc_trusted_domains }}
-      create: yes
-
-  - name: Add NC_TRUSTED_PROXIES env
-    ansible.builtin.lineinfile:
-      path: ~/storage/nextcloud/nextcloud.env
-      line: NC_TRUSTED_PROXIES={{ nc_trusted_proxies }}
-      create: yes
-
-  - name: Add NC_DEFAULT_LANGUAGE env 
-    ansible.builtin.lineinfile:
-      path: ~/storage/nextcloud/nextcloud.env
-      line: NC_DEFAULT_LANGUAGE={{ nc_default_language }}
-      create: yes
-
-  - name: Add NC_DEFAULT_PHONE_REGION env 
-    ansible.builtin.lineinfile:
-      path: ~/storage/nextcloud/nextcloud.env
-      line: NC_DEFAULT_PHONE_REGION={{ nc_default_phone_region }}
-      create: yes
-
-  - name: Add NC_DEFAULT_LOCALE env 
-    ansible.builtin.lineinfile:
-      path: ~/storage/nextcloud/nextcloud.env
-      line: NC_DEFAULT_LOCALE={{ nc_default_locale }}
-      create: yes
-
-  - name: Add NC_DEFAULT_TIMEZONE env 
-    ansible.builtin.lineinfile:
-      path: ~/storage/nextcloud/nextcloud.env
-      line: NC_DEFAULT_TIMEZONE={{ nc_default_timezone }}
-      create: yes
 
   - name: Run daemon reload to make Quadlet create the service files
     ansible.builtin.systemd:
