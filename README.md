@@ -5,7 +5,7 @@ Run containerized Nextcloud as systemd services with Podman 5.
 ## Setup
 
 Clone this repo and enter the directory.
-Next, create an `inventory.yaml` with the following variables:
+Next, create an `inventory.yml` with the following variables:
 
 ```yaml
 all:
