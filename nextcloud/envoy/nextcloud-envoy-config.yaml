@@ -102,6 +102,11 @@ static_resources:
                   cluster: nextcloud_office
                   timeout: 0s
               - match:
+                  prefix: "/cool/clipboard"
+                route:
+                  cluster: nextcloud_office
+                  timeout: 0s
+              - match:
                   safe_regex:
                     regex: "^/(c|l)ool"
                 route:
