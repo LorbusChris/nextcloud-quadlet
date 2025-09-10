@@ -9,7 +9,7 @@ Image=docker.io/nextcloud:apache
 AutoUpdate=registry
 Entrypoint=/lifecycle.sh
 Exec=periodic
-UserNS=keep-id:uid=33,gid=33
+#UserNS=keep-id:uid=33,gid=33
 Volume=%h/storage/nextcloud/html:/var/www/html:z
 Volume=%h/storage/nextcloud/custom_apps:/var/www/html/custom_apps:z
 Volume=%h/storage/nextcloud/config:/var/www/html/config:z
