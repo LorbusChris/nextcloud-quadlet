@@ -3,7 +3,7 @@ Description=Nextcloud Valkey container
 
 [Container]
 ContainerName=nextcloud-valkey
-Image=docker.io/valkey/valkey:7.2-alpine
+Image=docker.io/valkey/valkey:alpine
 AutoUpdate=registry
 Network=nextcloud.network
 Pod=nextcloud.pod
