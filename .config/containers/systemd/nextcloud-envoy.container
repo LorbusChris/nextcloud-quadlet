@@ -5,7 +5,7 @@ Wants=nextcloud-server.service nextcloud-office.service nextcloud-init.service
 
 [Container]
 ContainerName=nextcloud-envoy
-Image=docker.io/envoyproxy/envoy:v1.31-latest
+Image=docker.io/envoyproxy/envoy:v1.33-latest
 AutoUpdate=registry
 Environment=ENVOY_UID=0
 Volume=%h/storage/nextcloud/certs:/etc/envoy-certificates:z,ro
