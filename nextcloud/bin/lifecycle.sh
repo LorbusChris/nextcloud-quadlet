@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -xu
 
 nextcloud_init() {
     sleep 60;
@@ -60,19 +61,86 @@ nextcloud_init() {
     php occ config:system:set memcache.distributed --value="\OC\Memcache\Redis"
     php occ config:system:set memcache.locking --value="\OC\Memcache\Redis"
 
-    php occ app:enable calendar
-    php occ app:enable contacts
-    php occ app:enable tasks
-    php occ app:enable deck
-    php occ app:enable notes
-    php occ app:enable news -f
-    php occ app:install maps
-    php occ app:enable maps
-    #php occ app:enable twofactor_totp
-    #php occ app:install mail
-    #php occ app:enable mail
+    php occ app:install serverinfo
+    php occ app:enable serverinfo
+
+    #php occ app:install integration_mastodon
+    #php occ app:enable integration_mastodon
+
+    #php occ app:install integration_github
+    #php occ app:enable integration_github
+
     #php occ app:install user_oidc
     #php occ app:enable user_oidc
+
+    #php occ app:install twofactor_totp
+    #php occ app:enable twofactor_totp
+
+    #php occ app:install files_antivirus
+    #php occ app:enable files_antivirus
+
+    #php occ app:install files_accesscontrol
+    #php occ app:enable files_accesscontrol
+
+    #php occ app:install solid
+    #php occ app:enable solid
+
+    php occ app:install socialsharing_email
+    php occ app:enable socialsharing_email
+
+    php occ app:install ransomware_protection
+    php occ app:enable ransomware_protection
+
+    php occ app:install groupfolders
+    php occ app:enable groupfolders
+
+    php occ app:install quota_warning
+    php occ app:enable quota_warning
+
+    php occ app:install passman
+    php occ app:enable passman
+
+    php occ app:install bookmarks
+    php occ app:enable bookmarks
+
+    php occ app:install calendar
+    php occ app:enable calendar
+
+    php occ app:install contacts
+    php occ app:enable contacts
+
+    php occ app:install mail
+    php occ app:enable mail
+
+    php occ app:install tasks
+    php occ app:enable tasks
+
+    php occ app:install deck
+    php occ app:enable deck
+
+    php occ app:install notes
+    php occ app:enable notes
+
+    php occ app:install polls
+    php occ app:enable polls
+
+    php occ app:install forms
+    php occ app:enable forms
+
+    php occ app:install news
+    php occ app:enable news
+
+    php occ app:install maps
+    php occ app:enable maps
+
+    php occ app:install collectives
+    php occ app:enable collectives
+
+    php occ app:install whiteboard
+    php occ app:enable whiteboard
+
+    php occ app:install cookbook
+    php occ app:enable cookbook
 
     php occ app:install richdocuments
     php occ app:enable richdocuments
@@ -132,7 +200,7 @@ nextcloud_status() {
 if [[ ! -n $1 ]];
 then 
     echo "no command specified"
-    exit 33;
+    exit 33
 fi
 
 case "$1" in
