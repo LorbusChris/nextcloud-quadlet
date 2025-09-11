@@ -3,7 +3,7 @@ Description=Nextcloud MariaDB container
 
 [Container]
 ContainerName=nextcloud-db
-Image=docker.io/mariadb:lts
+Image=docker.io/mariadb:11.4
 AutoUpdate=registry
 Exec=--transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
 Environment=MARIADB_AUTO_UPGRADE=1
