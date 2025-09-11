@@ -13,6 +13,7 @@ Volume=%h/storage/nextcloud/html:/var/www/html:z
 Volume=%h/storage/nextcloud/custom_apps:/var/www/html/custom_apps:z
 Volume=%h/storage/nextcloud/config:/var/www/html/config:z
 Volume=%h/storage/nextcloud/data:/var/www/html/data:z
+Volume=%h/storage/nextcloud/log:/var/log:z
 Volume=%h/storage/nextcloud/bin/lifecycle.sh:/lifecycle.sh:z,ro
 Network=nextcloud.network
 Pod=nextcloud.pod

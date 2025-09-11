@@ -67,6 +67,7 @@
     - ~/storage/nextcloud/db
     - ~/storage/nextcloud/envoy
     - ~/storage/nextcloud/html
+    - ~/storage/nextcloud/log
     - ~/storage/nextcloud/redis
 
   - name: Copy the systemd and Quadlet files
