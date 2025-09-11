@@ -104,6 +104,13 @@
       scope: user
       daemon_reload: true
 
+  - name: Start the Nextcloud DB quadlet service
+    ansible.builtin.systemd:
+      name: nextcloud-database-pod
+      scope: user
+      state: restarted
+      enabled: true
+
   - name: Start the Nextcloud quadlet service
     ansible.builtin.systemd:
       name: nextcloud-pod

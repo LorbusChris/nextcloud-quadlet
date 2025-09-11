@@ -13,8 +13,9 @@ Environment=MYSQL_USER=nextcloud
 Secret=nextcloud-db-root-password,type=env,target=MYSQL_ROOT_PASSWORD
 Secret=nextcloud-db-password,type=env,target=MYSQL_PASSWORD
 Volume=%h/storage/nextcloud/db:/var/lib/mysql:Z
+PublishPort=3306:3306
 Network=nextcloud.network
-Pod=nextcloud.pod
+Pod=nextcloud-database.pod
 
 [Service]
 Restart=always

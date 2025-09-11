@@ -1,0 +1,11 @@
+[Unit]
+Description=Nextcloud DB pod
+
+[Pod]
+PodName=nextcloud-database
+# MariaDB
+UserNS=keep-id:uid=999,gid=999
+Network=nextcloud.network
+
+[Install]
+WantedBy=multi-user.target default.target
