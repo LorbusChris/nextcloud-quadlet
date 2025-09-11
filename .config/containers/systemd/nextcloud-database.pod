@@ -3,7 +3,7 @@ Description=Nextcloud DB pod
 
 [Pod]
 PodName=nextcloud-database
-# MariaDB
+# MariaDB & Valkey
 UserNS=keep-id:uid=999,gid=999
 Network=nextcloud.network
 

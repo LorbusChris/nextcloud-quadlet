@@ -3,10 +3,11 @@ Description=Nextcloud Valkey container
 
 [Container]
 ContainerName=nextcloud-valkey
-Image=docker.io/valkey/valkey:alpine
+Image=docker.io/valkey/valkey:latest
 AutoUpdate=registry
 Network=nextcloud.network
-Pod=nextcloud.pod
+PublishPort=6379:6379
+Pod=nextcloud-database.pod
 
 [Service]
 Restart=always
