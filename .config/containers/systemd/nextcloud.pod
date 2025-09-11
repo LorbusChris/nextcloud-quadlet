@@ -3,6 +3,10 @@ Description=Nextcloud pod
 
 [Pod]
 PodName=nextcloud
+# Nextcloud Server
+UserNS=keep-id:uid=33,gid=33
+# MariaDB
+UserNS=keep-id:uid=999,gid=999
 Network=nextcloud.network
 
 [Install]

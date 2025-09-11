@@ -7,7 +7,6 @@ Wants=nextcloud-db.service nextcloud-valkey.service
 ContainerName=nextcloud-server
 Image=docker.io/nextcloud:apache
 AutoUpdate=registry
-UserNS=keep-id:uid=33,gid=33
 Sysctl=net.ipv4.ip_unprivileged_port_start=80
 EnvironmentFile=%h/storage/nextcloud/nextcloud.env
 Volume=%h/storage/nextcloud/config:/var/www/html/config:z

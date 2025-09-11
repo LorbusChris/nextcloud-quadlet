@@ -1,7 +1,7 @@
 [Unit]
 Description=Nextcloud Envoy container
-After=nextcloud-server.service nextcloud-office.service nextcloud-init.service
-Wants=nextcloud-server.service nextcloud-office.service nextcloud-init.service
+After=nextcloud-server.service nextcloud-office.service
+Wants=nextcloud-server.service nextcloud-office.service
 
 [Container]
 ContainerName=nextcloud-envoy

@@ -9,7 +9,6 @@ Image=docker.io/nextcloud:apache
 AutoUpdate=registry
 Entrypoint=/lifecycle.sh
 Exec=init
-UserNS=keep-id:uid=33,gid=33
 EnvironmentFile=%h/storage/nextcloud/nextcloud.env
 Secret=nextcloud-db-password,type=env,target=NC_DB_PASSWORD
 Secret=nextcloud-admin-password,type=env,target=NC_ADMIN_PASSWORD

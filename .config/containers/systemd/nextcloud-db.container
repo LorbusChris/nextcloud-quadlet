@@ -6,7 +6,6 @@ ContainerName=nextcloud-db
 Image=docker.io/mariadb:lts
 AutoUpdate=registry
 Exec=--transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
-UserNS=keep-id:uid=999,gid=999
 Environment=MARIADB_AUTO_UPGRADE=1
 #Environment=MARIADB_DISABLE_UPGRADE_BACKUP=1
 Environment=MYSQL_DATABASE=nextcloud
