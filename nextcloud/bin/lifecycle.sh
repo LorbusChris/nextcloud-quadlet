@@ -36,14 +36,14 @@ nextcloud_init() {
         if [[ $NC_DOMAIN_IDX == 0 ]]; then
                 CLI_URL=${DOMAIN}
         fi
-        NC_DOMAIN_IDX=$(($NC_DOMAIN_IDX+1))
+        NC_DOMAIN_IDX=$NC_DOMAIN_IDX+1
     done
 
     NC_PROXY_IDX=0
     for PROXY in "${NC_TRUSTED_PROXIES[@]}"; do
         PROXY=$(echo "$PROXY" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
         php occ config:system:set trusted_proxies "$NC_PROXY_IDX" --value="$PROXY"
-        NC_PROXY_IDX=$(($NC_PROXY_IDX+1))
+        NC_PROXY_IDX=$NC_PROXY_IDX+1
     done
 
     php occ config:system:set default_language --value="${NC_DEFAULT_LANGUAGE}"
@@ -161,8 +161,8 @@ nextcloud_upgrade() {
     php occ status -v
     php occ app:list
 
-    UPGRADE_LOGFILE="/var/log/nextcloud-upgrade_"$(date +%y_%m_%d)".log"
-    php occ upgrade 2>&1 >> "$UPGRADE_LOGFILE"
+    UPGRADE_LOGFILE="/var/log/nextcloud-upgrade_$(date +%y_%m_%d).log"
+    php occ upgrade 2>&1 | tee -a "$UPGRADE_LOGFILE"
     DISABLED_APPS=( $(cat "$UPGRADE_LOGFILE" | grep "Disabled incompatible app:" | cut -d ":" -f 2 | egrep -o "[a-z]+[a-z0-9_]*[a-z0-9]+") )
     for APP_ID in "${DISABLED_APPS[@]}"; do
         php occ app:enable "$APP_ID" || php occ app:install "$APP_ID" || echo "Could not re-enable nextcloud app $APP_ID"
@@ -197,7 +197,7 @@ nextcloud_status() {
     echo "nextcloud status: $rc"
 }
 
-if [[ ! -n $1 ]];
+if [[ -z $1 ]];
 then 
     echo "no command specified"
     exit 33
