@@ -81,34 +81,16 @@ static_resources:
                   prefix: "/browser"
                 route:
                   cluster: nextcloud_office
-                  timeout: 0s
               - match:
-                  prefix: "/hosting/discovery"
+                  prefix: "/cool"
                 route:
                   cluster: nextcloud_office
               - match:
-                  prefix: "/hosting/capabilities"
+                  prefix: "/hosting"
                 route:
                   cluster: nextcloud_office
               - match:
-                  safe_regex:
-                    regex: "^/cool/(.*)/ws$"
-                route:
-                  cluster: nextcloud_office
-                  timeout: 0s
-              - match:
-                  prefix: "/cool/adminws"
-                route:
-                  cluster: nextcloud_office
-                  timeout: 0s
-              - match:
-                  prefix: "/cool/clipboard"
-                route:
-                  cluster: nextcloud_office
-                  timeout: 0s
-              - match:
-                  safe_regex:
-                    regex: "^/(c|l)ool"
+                  prefix: "/lool"
                 route:
                   cluster: nextcloud_office
       transport_socket:
